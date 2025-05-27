@@ -1,4 +1,7 @@
-const http = require('http')
+const express = require('express')
+const app = express()
+
+app.use(express.json())
 
 let persons = [
     { 
@@ -22,32 +25,43 @@ let persons = [
         number: "39-23-6423122"
     }
 ]
+// Rota base
+app.get('/', (request, response) => {
+    response.send('<h1>Phonebook Backend</h1>')
+})
 
-const app = http.createServer((request, response) => {
-    const url = request.url
+// GET all persons
+app.get('/api/persons', (request, response) => {
+    response.json(persons)
+})
 
-    if (url === '/info') {
-        const date = new Date()
-        const count = persons.length
-        const htmlResponse = `
-            <div>
-                <p>Phonebook has info for ${count} people</p>
-                <p>${date}</p>
-            </div>
-        `
-        response.writeHead(200, { 'Content-Type': 'text/html' })
-        response.end(htmlResponse)
-
-    } else if (url === '/api/persons') {
-        response.writeHead(200, { 'Content-Type': 'application/json' })
-        response.end(JSON.stringify(persons))
-
+// GET person by id
+app.get('/api/persons/:id', (request, response) => {
+    const id = request.params.id
+    const person = persons.find(p => p.id === id)
+    
+    if (person) {
+        response.json(person)
     } else {
-        response.writeHead(404, { 'Content-Type': 'text/plain' })
-        response.end('404 Not Found')
+        response.status(404).json({ error: 'Person not found' })
     }
 })
 
+// GET info page
+app.get('/info', (request, response) => {
+    const count = persons.length
+    const date = new Date()
+    const html = `
+        <div>
+            <p>Phonebook has info for ${count} people</p>
+            <p>${date}</p>
+        </div>
+    `
+    response.send(html)
+})
+
+// Porta de escuta
 const PORT = 3001
-app.listen(PORT)
-console.log(`Server running on port ${PORT}`)
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`)
+})
