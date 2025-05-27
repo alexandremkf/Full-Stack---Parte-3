@@ -60,7 +60,7 @@ app.get('/info', (request, response) => {
     response.send(html)
 })
 
-// Porta de escuta
+// Porta de escuta do método http
 const PORT = 3001
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
