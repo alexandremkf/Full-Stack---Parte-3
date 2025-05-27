@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
+    "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -16,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/alexandremkf/Full-Stack---Parte-3/issues"
   },
-  "homepage": "https://github.com/alexandremkf/Full-Stack---Parte-3#readme"
+  "homepage": "https://github.com/alexandremkf/Full-Stack---Parte-3#readme",
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
 }

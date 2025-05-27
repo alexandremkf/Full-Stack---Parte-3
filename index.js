@@ -24,8 +24,28 @@ let persons = [
 ]
 
 const app = http.createServer((request, response) => {
-    response.writeHead(200, { 'Content-Type': 'application/json' })
-    response.end(JSON.stringify(persons))
+    const url = request.url
+
+    if (url === '/info') {
+        const date = new Date()
+        const count = persons.length
+        const htmlResponse = `
+            <div>
+                <p>Phonebook has info for ${count} people</p>
+                <p>${date}</p>
+            </div>
+        `
+        response.writeHead(200, { 'Content-Type': 'text/html' })
+        response.end(htmlResponse)
+
+    } else if (url === '/api/persons') {
+        response.writeHead(200, { 'Content-Type': 'application/json' })
+        response.end(JSON.stringify(persons))
+
+    } else {
+        response.writeHead(404, { 'Content-Type': 'text/plain' })
+        response.end('404 Not Found')
+    }
 })
 
 const PORT = 3001
