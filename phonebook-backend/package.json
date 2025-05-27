@@ -20,5 +20,8 @@
   "homepage": "https://github.com/alexandremkf/Full-Stack---Parte-3#readme",
   "devDependencies": {
     "nodemon": "^3.1.10"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
   }
 }
