@@ -1,7 +1,9 @@
 const express = require('express')
+const morgan = require('morgan')
 const app = express()
 
 app.use(express.json())
+app.use(morgan('tiny'))
 
 const requestLogger = (request, response, next) => {
     console.log('Method:', request.method)
@@ -35,17 +37,17 @@ let persons = [
         number: "39-23-6423122"
     }
 ]
-// Rota base
+// Rota inicial simples
 app.get('/', (request, response) => {
     response.send('<h1>Phonebook Backend</h1>')
 })
 
-// GET todas as pessoas
+// GET mostra todas as pessoas
 app.get('/api/persons', (request, response) => {
     response.json(persons)
 })
 
-// GET pessoa pela id
+// GET mostra uma pessoa específica pelo id
 app.get('/api/persons/:id', (request, response) => {
     const id = request.params.id
     const person = persons.find(p => p.id === id)
