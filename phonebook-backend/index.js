@@ -3,7 +3,12 @@ const morgan = require('morgan')
 const app = express()
 
 app.use(express.json())
-app.use(morgan('tiny'))
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
+
+// Token personalizado para mostrar o body apenas em requisições POST
+morgan.token('body', (req) => {
+    return req.method === 'POST' ? JSON.stringify(req.body) : ''
+})  
 
 const requestLogger = (request, response, next) => {
     console.log('Method:', request.method)
