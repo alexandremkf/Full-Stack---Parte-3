@@ -73,6 +73,24 @@ app.delete('/api/persons/:id', (request, response) => {
     response.status(204).end()
 })
 
+// POST nova pessoa à lista de contatos
+app.post('/api/persons', (request, response) => {
+    const body = request.body
+
+    if (!body.name || !body.number) {
+        return response.status(400).json({ error: 'Name and number are required' })
+    }
+
+    const person = {
+        id: Math.floor(Math.random() * 1000000).toString(), // ID como string para manter padrão
+        name: body.name,
+        number: body.number,
+    }
+
+    persons.push(person)
+    response.status(201).json(person)
+})
+
 // Porta de escuta do método http
 const PORT = 3001
 app.listen(PORT, () => {
