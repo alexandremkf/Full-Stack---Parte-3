@@ -30,12 +30,12 @@ app.get('/', (request, response) => {
     response.send('<h1>Phonebook Backend</h1>')
 })
 
-// GET all persons
+// GET todas as pessoas
 app.get('/api/persons', (request, response) => {
     response.json(persons)
 })
 
-// GET person by id
+// GET pessoa pela id
 app.get('/api/persons/:id', (request, response) => {
     const id = request.params.id
     const person = persons.find(p => p.id === id)
@@ -47,7 +47,7 @@ app.get('/api/persons/:id', (request, response) => {
     }
 })
 
-// GET info page
+// GET info da página
 app.get('/info', (request, response) => {
     const count = persons.length
     const date = new Date()
@@ -58,6 +58,19 @@ app.get('/info', (request, response) => {
         </div>
     `
     response.send(html)
+})
+
+// DELETE pessoa pelo id
+app.delete('/api/persons/:id', (request, response) => {
+    const id = request.params.id
+    const initialLength = persons.length
+    persons = persons.filter(p => p.id !== id)
+
+    if (persons.length === initialLength) {
+        return response.status(404).json({ error: 'Person not found' })
+    }
+
+    response.status(204).end()
 })
 
 // Porta de escuta do método http
