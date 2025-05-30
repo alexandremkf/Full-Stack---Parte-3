@@ -119,10 +119,17 @@ app.post('/api/persons', (request, response) => {
     response.status(201).json(person)
 })
 
+const path = require('path')
+
+// Serve o index.html para qualquer rota que não seja API
+app.get('*', (request, response) => {
+  response.sendFile(path.resolve(__dirname, 'dist', 'index.html'))
+})
+
+// Middleware de rota desconhecida
 const unknownEndpoint = (request, response) => {
     response.status(404).send({ error: 'unknown endpoint' })
 }
-  
 app.use(unknownEndpoint)  
 
 // Porta de escuta do método http
