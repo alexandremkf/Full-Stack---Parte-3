@@ -122,8 +122,8 @@ app.post('/api/persons', (request, response) => {
 const path = require('path')
 
 // Serve o index.html para qualquer rota que não seja API
-app.get('*', (request, response) => {
-  response.sendFile(path.resolve(__dirname, 'dist', 'index.html'))
+app.use((req, res) => {
+    res.status(404).send('Not found')
 })
 
 // Comentando para testar
