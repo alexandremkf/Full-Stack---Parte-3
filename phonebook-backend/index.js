@@ -2,15 +2,15 @@ const express = require('express')
 const morgan = require('morgan')
 const app = express()
 
-app.use(express.static('dist'))
-app.use(express.json())
-
 // Token personalizado para mostrar o body apenas em requisições POST
 morgan.token('body', (req) => {
     return req.method === 'POST' ? JSON.stringify(req.body) : ''
 })  
 
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
+
+app.use(express.static('dist'))
+app.use(express.json())
 
 const requestLogger = (request, response, next) => {
     console.log('Method:', request.method)
