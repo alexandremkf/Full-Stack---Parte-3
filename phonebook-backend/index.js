@@ -126,11 +126,12 @@ app.get('*', (request, response) => {
   response.sendFile(path.resolve(__dirname, 'dist', 'index.html'))
 })
 
-// Middleware de rota desconhecida
-const unknownEndpoint = (request, response) => {
-    response.status(404).send({ error: 'unknown endpoint' })
-}
-app.use(unknownEndpoint)  
+// Comentando para testar
+// // Middleware de rota desconhecida
+// const unknownEndpoint = (request, response) => {
+//     response.status(404).send({ error: 'unknown endpoint' })
+// }
+// app.use(unknownEndpoint)  
 
 // Porta de escuta do método http
 const PORT = 3001
