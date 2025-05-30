@@ -44,10 +44,12 @@ let persons = [
         number: "39-23-6423122"
     }
 ]
-// Rota inicial simples
-app.get('/', (request, response) => {
-    response.send('<h1>Phonebook Backend</h1>')
-})
+
+// Comentei pois estava subescrevendo o HTML criado no front-end.
+// // Rota inicial simples
+// app.get('/', (request, response) => {
+//     response.send('<h1>Phonebook Backend</h1>')
+// })
 
 // GET mostra todas as pessoas
 app.get('/api/persons', (request, response) => {
