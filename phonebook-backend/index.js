@@ -1,3 +1,4 @@
+const Person = require('./models/person')
 const express = require('express')
 const morgan = require('morgan')
 const app = express()
@@ -52,8 +53,10 @@ let persons = [
 // })
 
 // GET mostra todas as pessoas
-app.get('/api/persons', (request, response) => {
-    response.json(persons)
+app.get('/api/persons', (req, res) => {
+    Person.find({}).then(persons => {
+      res.json(persons)
+    })
 })
 
 // GET mostra uma pessoa específica pelo id
