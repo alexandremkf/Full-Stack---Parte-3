@@ -17,16 +17,13 @@ app.get('/api/notes', (req, res) => {
   })
 })
 
-app.get('/api/notes/:id', (req, res, next) => {
-  Note.findById(req.params.id)
-    .then(note => {
-      if (note) res.json(note)
-      else res.status(404).end()
-    })
-    .catch(error => next(error))
+app.get('/api/notes/:id', (req, res) => {
+  Note.findById(req.params.id).then(note => {
+    response.json(note)
+  })
 })
 
-app.post('/api/notes', (req, res, next) => {
+app.post('/api/notes', (req, res) => {
   const body = req.body
 
   if (!body.content) {
@@ -38,9 +35,9 @@ app.post('/api/notes', (req, res, next) => {
     important: body.important || false,
   })
 
-  note.save()
-    .then(savedNote => res.status(201).json(savedNote))
-    .catch(error => next(error))
+  note.save().then(savedNote => {
+    res.json(savedNote)
+  })
 })
 
 app.delete('/api/notes/:id', (req, res, next) => {
