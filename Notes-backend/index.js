@@ -21,14 +21,14 @@ app.get('/api/notes/:id', (req, res) => {
   Note.findById(req.params.id)
     .then(note => {
     if (note) {
-      response.json(note)
+      res.json(note)
     } else {
-      response.status(404).end()
+      res.status(404).end()
     }
   })
   .catch(error => {
     console.log(error)
-    response.status(500).end()
+    res.status(400).send({ error: 'malformatted id' })
   })
 })
 
