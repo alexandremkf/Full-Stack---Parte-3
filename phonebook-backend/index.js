@@ -24,29 +24,6 @@ const requestLogger = (request, response, next) => {
   
 app.use(requestLogger)  
 
-let persons = [
-    { 
-        id: "1",
-        name: "Arto Hellas", 
-        number: "040-123456"
-    },
-    { 
-        id: "2",
-        name: "Ada Lovelace", 
-        number: "39-44-5323523"
-    },
-    { 
-        id: "3",
-        name: "Dan Abramov", 
-        number: "12-43-234345"
-    },
-    { 
-        id: "4",
-        name: "Mary Poppendieck", 
-        number: "39-23-6423122"
-    }
-]
-
 // GET mostra todas as pessoas
 app.get('/api/persons', (req, res) => {
     Person.find({}).then(persons => {
@@ -68,16 +45,19 @@ app.get('/api/persons/:id', (req, res, next) => {
 })
 
 // GET info da página
-app.get('/info', (request, response) => {
-    const count = persons.length
-    const date = new Date()
-    const html = `
-        <div>
-            <p>Phonebook has info for ${count} people</p>
-            <p>${date}</p>
-        </div>
-    `
-    response.send(html)
+app.get('/info', (request, response, next) => {
+    Person.countDocuments({})
+      .then(count => {
+        const date = new Date()
+        const html = `
+            <div>
+                <p>Phonebook has info for ${count} people</p>
+                <p>${date}</p>
+            </div>
+        `
+        response.send(html)
+      })
+      .catch(error => next(error))
 })
 
 // DELETE pessoa pelo id
