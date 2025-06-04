@@ -49,6 +49,25 @@ app.post('/api/notes', (req, res) => {
   })
 })
 
+app.put('/api/notes/:id', (req, res, next) => {
+  const { content, important } = req.body
+
+  Note.findById(req.params.id)
+    .then(note => {
+      if (!note) {
+        return res.status(404).end()
+      }
+
+      note.content = content
+      note.important = important
+
+      return note.save().then((updatedNote) => {
+        res.json(updatedNote)
+      })
+    })
+    .catch(error => next(error))
+})
+
 app.delete('/api/notes/:id', (req, res, next) => {
   Note.findByIdAndDelete(req.params.id)
     .then(result =>{
