@@ -17,7 +17,7 @@ app.get('/api/notes', (req, res) => {
   })
 })
 
-app.get('/api/notes/:id', (req, res) => {
+app.get('/api/notes/:id', (req, res, next) => {
   Note.findById(req.params.id)
     .then(note => {
     if (note) {
@@ -26,10 +26,7 @@ app.get('/api/notes/:id', (req, res) => {
       res.status(404).end()
     }
   })
-  .catch(error => {
-    console.log(error)
-    res.status(400).send({ error: 'malformatted id' })
-  })
+  .catch(error => next(error))
 })
 
 app.post('/api/notes', (req, res) => {
