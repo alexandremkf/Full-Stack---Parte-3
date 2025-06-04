@@ -86,17 +86,13 @@ app.get('/info', (request, response) => {
 })
 
 // DELETE pessoa pelo id
-app.delete('/api/persons/:id', (request, response) => {
-    const id = request.params.id
-    const initialLength = persons.length
-    persons = persons.filter(p => p.id !== id)
-
-    if (persons.length === initialLength) {
-        return response.status(404).json({ error: 'Person not found' })
-    }
-
-    response.status(204).end()
-})
+app.delete('/api/persons/:id', (req, res, next) => {
+    Person.findByIdAndDelete(req.params.id)
+      .then(() => {
+        res.status(204).end()
+      })
+      .catch(error => next(error))
+})  
 
 // POST nova pessoa à lista de contatos
 app.post('/api/persons', (request, response) => {
