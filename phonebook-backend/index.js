@@ -108,6 +108,30 @@ app.post('/api/persons', (request, response, next) => {
 
 const path = require('path')
 
+app.put('/api/persons/:id', (req, res, next) => {
+    const { name, number } = req.body
+  
+    const updatedPerson = {
+      name,
+      number
+    }
+  
+    Person.findByIdAndUpdate(req.params.id, updatedPerson, {
+      new: true,
+      runValidators: true,
+      context: 'query'
+    })
+      .then(result => {
+        if (result) {
+          res.json(result)
+        } else {
+          res.status(404).end()
+        }
+      })
+      .catch(error => next(error))
+})
+  
+
 // Serve o index.html para qualquer rota que não seja API
 app.use((req, res) => {
     res.status(404).send('Not found')
