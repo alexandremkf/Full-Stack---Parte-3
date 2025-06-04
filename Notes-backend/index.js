@@ -50,8 +50,10 @@ app.post('/api/notes', (req, res) => {
 })
 
 app.delete('/api/notes/:id', (req, res, next) => {
-  Note.findByIdAndRemove(req.params.id)
-    .then(() => res.status(204).end())
+  Note.findByIdAndDelete(req.params.id)
+    .then(result =>{
+      res.status(204).end()
+    })
     .catch(error => next(error))
 })
 
