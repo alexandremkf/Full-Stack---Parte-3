@@ -18,8 +18,17 @@ app.get('/api/notes', (req, res) => {
 })
 
 app.get('/api/notes/:id', (req, res) => {
-  Note.findById(req.params.id).then(note => {
-    response.json(note)
+  Note.findById(req.params.id)
+    .then(note => {
+    if (note) {
+      response.json(note)
+    } else {
+      response.status(404).end()
+    }
+  })
+  .catch(error => {
+    console.log(error)
+    response.status(500).end()
   })
 })
 
