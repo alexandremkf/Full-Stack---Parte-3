@@ -4,6 +4,9 @@ const morgan = require('morgan')
 const app = express()
 const Note = require('./models/note')
 
+// Servindo o front-end para cá
+app.use(express.static('dist'))
+
 // Middlewares
 app.use(express.json())
 
