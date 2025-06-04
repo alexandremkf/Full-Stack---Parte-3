@@ -47,12 +47,6 @@ let persons = [
     }
 ]
 
-// Comentei pois estava subescrevendo o HTML criado no front-end.
-// // Rota inicial simples
-// app.get('/', (request, response) => {
-//     response.send('<h1>Phonebook Backend</h1>')
-// })
-
 // GET mostra todas as pessoas
 app.get('/api/persons', (req, res) => {
     Person.find({}).then(persons => {
@@ -61,15 +55,16 @@ app.get('/api/persons', (req, res) => {
 })
 
 // GET mostra uma pessoa específica pelo id
-app.get('/api/persons/:id', (request, response) => {
-    const id = request.params.id
-    const person = persons.find(p => p.id === id)
-    
-    if (person) {
-        response.json(person)
-    } else {
-        response.status(404).json({ error: 'Person not found' })
-    }
+app.get('/api/persons/:id', (req, res, next) => {
+    Person.findById(req.params.id)
+      .then(person => {
+        if (person) {
+          res.json(person)
+        } else {
+          res.status(404).send({ error: 'Person not found' })
+        }
+      })
+      .catch(error => next(error)) // isso dispara o middleware de erro
 })
 
 // GET info da página
@@ -95,13 +90,8 @@ app.delete('/api/persons/:id', (req, res, next) => {
 })  
 
 // POST nova pessoa à lista de contatos
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
     const body = request.body
-
-    // Validação: nome ou número ausentes
-    if (!body.name || !body.number) {
-        return response.status(400).json({ error: 'Name and number are required' })
-    }
     
     // Estrutura do person a ser criado
     const person = new Person({
@@ -110,10 +100,10 @@ app.post('/api/persons', (request, response) => {
     })
 
     person.save()
-    .then(savedPerson => {
-      response.status(201).json(savedPerson)
-    })
-    .catch(error => next(error))
+        .then(savedPerson => {
+            response.status(201).json(savedPerson)
+        })
+        .catch(error => next(error)) // aqui virá o ValidationError
 })
 
 const path = require('path')
@@ -123,12 +113,27 @@ app.use((req, res) => {
     res.status(404).send('Not found')
 })
 
-// Comentando para testar
-// // Middleware de rota desconhecida
-// const unknownEndpoint = (request, response) => {
-//     response.status(404).send({ error: 'unknown endpoint' })
-// }
-// app.use(unknownEndpoint)  
+// Middleware de rota desconhecida
+const unknownEndpoint = (request, response) => {
+    response.status(404).send({ error: 'unknown endpoint' })
+}
+app.use(unknownEndpoint)  
+
+// Middleware para erros
+const errorHandler = (error, req, res, next) => {
+    console.error(error.message)
+  
+    if (error.name === 'CastError') {
+      return res.status(400).send({ error: 'Malformatted ID' })
+    }
+  
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({ error: error.message })
+    }
+  
+    next(error)
+  }
+app.use(errorHandler)  
 
 // Porta de escuta do método http
 const PORT = 3001
