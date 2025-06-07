@@ -32,21 +32,19 @@ app.get('/api/notes/:id', (req, res, next) => {
   .catch(error => next(error))
 })
 
-app.post('/api/notes', (req, res) => {
-  const body = req.body
-
-  if (!body.content) {
-    return res.status(400).json({ error: 'Content missing' })
-  }
+app.post('/api/notes', (request, response, next) => {
+  const body = request.body
 
   const note = new Note({
     content: body.content,
     important: body.important || false,
   })
 
-  note.save().then(savedNote => {
-    res.json(savedNote)
-  })
+  note.save()
+    .then(savedNote => {
+      response.json(savedNote)
+    })
+    .catch(error => next(error))
 })
 
 app.put('/api/notes/:id', (req, res, next) => {
@@ -83,11 +81,14 @@ const unknownEndpoint = (req, res) => {
 app.use(unknownEndpoint)
 
 // Middleware para erros
-const errorHandler = (error, req, res, next) => {
+const errorHandler = (error, request, response, next) => {
   console.error(error.message)
 
   if (error.name === 'CastError') {
-    return res.status(400).send({ error: 'Malformatted ID' })
+    return response.status(400).send({ error: 'malformatted id' })
+
+  } else if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message })
   }
 
   next(error)

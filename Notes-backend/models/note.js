@@ -17,7 +17,11 @@ mongoose.connect(url)
 
 // Definição do Schema e Model
 const noteSchema = new mongoose.Schema({
-  content: String,
+  content: {
+    type: String,
+    minlength: 5,
+    required: true,
+  },
   important: Boolean,
 })
 
