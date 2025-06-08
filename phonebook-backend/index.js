@@ -111,7 +111,6 @@ app.put('/api/persons/:id', (req, res, next) => {
       .catch(error => next(error))
 })
   
-
 // Serve o index.html para qualquer rota que não seja API
 app.use((req, res) => {
     res.status(404).send('Not found')
